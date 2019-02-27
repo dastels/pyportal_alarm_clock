@@ -60,3 +60,11 @@ target/
 code/secrets\.py
 
 *.png
+
+code/icons/alarm\.bmp
+
+code/icons/settings\.bmp
+
+*.mp3
+
+code/openweather_graphics\.py
