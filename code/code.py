@@ -520,7 +520,6 @@ def change_to_state(state_name):
 clear_splash()
 change_to_state("time")
 
-
 while True:
     touched = current_state.touch(pyportal.touchscreen.touch_point, touched)
     current_state.tick(time.monotonic())
