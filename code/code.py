@@ -36,7 +36,8 @@ DATA_LOCATION = []
 
 pyportal = PyPortal(url=DATA_SOURCE,
                     json_path=DATA_LOCATION,
-                    status_neopixel=board.NEOPIXEL)
+                    status_neopixel=board.NEOPIXEL,
+                    splash_max=10)
 
 light = analogio.AnalogIn(board.LIGHT)
 
