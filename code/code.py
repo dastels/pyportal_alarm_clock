@@ -99,9 +99,8 @@ def load_fonts():
 
 small_font, medium_font, large_font = load_fonts()
 
-
 def create_text_areas(configs):
-    """Given a list of area dimensions, create and return test areas."""
+    """Given a list of area specifications, create and return test areas."""
     text_areas = []
     for cfg in configs:
         textarea = TextArea(cfg['font'], text=' '*cfg['size'])
@@ -110,8 +109,6 @@ def create_text_areas(configs):
         textarea.color = cfg['color']
         text_areas.append(textarea)
     return text_areas
-
-
 
 
 def clear_splash():
@@ -132,7 +129,7 @@ class State(object):
     """State abstract base class"""
 
     def __init__(self):
-        self.areas = []
+        pass
 
 
     @property
@@ -146,10 +143,11 @@ class State(object):
         pass
 
 
+    #pylint:disable=unused-argument
     def touch(self, t, touched):
         """Handle a touch event.
         :param (x, y, z) - t: the touch location/strength"""
-        pass
+        return bool(t)
 
 
     def enter(self):
@@ -159,7 +157,7 @@ class State(object):
 
     def exit(self):
         """Just before the state exits."""
-        pass
+        clear_splash()
 
 
 class Time_State(State):
@@ -224,7 +222,7 @@ class Time_State(State):
             change_to_state('alarm')
             return
 
-        # check light level and adjust backgrounf & backlight
+        # check light level and adjust background & backlight
         self.adjust_backlight_based_on_light()
 
         # only query the online time once per hour (and on first run)
@@ -329,10 +327,6 @@ class Time_State(State):
         board.DISPLAY.wait_for_frame()
 
 
-    def exit(self):
-        clear_splash()
-
-
 
 class Mugsy_State(Time_State):
     """This state tells Mugsey 'Make me a coffee' """
@@ -349,20 +343,6 @@ class Mugsy_State(Time_State):
     def tick(self, now):
         # Once the job is done, go back to the main screen
         change_to_state('time')
-
-
-    def touch(self, t, touched):
-        pass
-
-
-    def enter(self):
-        # make RESTful request to Mugsy harware to start brewingt
-        # or whatever you want
-        pass
-
-
-    def exit(self):
-        clear_splash()                    # do this because Time_State.enter will rebuild its screen
 
 
 class Alarm_State(State):
@@ -415,7 +395,7 @@ class Alarm_State(State):
 
     def exit(self):
         global alarm_armed
-        clear_splash()
+        super().exit()
         alarm_armed = bool(snooze_time)
 
 
@@ -440,10 +420,6 @@ class Setting_State(State):
     @property
     def name(self):
         return 'settings'
-
-
-    def tick(self, now):
-        pass
 
 
     def touch(self, t, touched):
@@ -488,10 +464,6 @@ class Setting_State(State):
             self.text_areas[0].text = '%02d:%02d' % (alarm_hour, alarm_minute) # set time textarea
         else:
             self.text_areas[0].text = '     '
-
-
-    def exit(self):
-        clear_splash()
 
 
 ####################
