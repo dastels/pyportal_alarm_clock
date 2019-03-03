@@ -75,29 +75,22 @@ weather_refresh = None
 
 low_light = False
 
+
+####################
+# Load the fonts
+
+large_font = bitmap_font.load_font('/fonts/Anton-Regular-104.bdf')
+large_font.load_glyphs(b'0123456789:') # pre-load glyphs for fast printing
+
+medium_font = bitmap_font.load_font('/fonts/Helvetica-Bold-36.bdf')
+medium_font.load_glyphs(b'0123456789:')
+
+small_font = bitmap_font.load_font('/fonts/Arial-16.bdf')
+small_font.load_glyphs(b'0123456789CF')
+
+
 ####################
 # Functions
-
-def load_fonts():
-    """Create, pre-fetch, and return small, medium, and large fonts.
-    These are used for temperature, alarm, and time, respectively"""
-
-    large_font_name = '/fonts/Anton-Regular-104.bdf'
-    medium_font_name = '/fonts/Helvetica-Bold-36.bdf'
-    small_font_name = '/fonts/Arial-16.bdf'
-
-    large_font = bitmap_font.load_font(large_font_name)
-    large_font.load_glyphs(b'0123456789:') # pre-load glyphs for fast printing
-
-    medium_font = bitmap_font.load_font(medium_font_name)
-    medium_font.load_glyphs(b'0123456789:')
-
-    small_font = bitmap_font.load_font(small_font_name)
-    small_font.load_glyphs(b'0123456789CF')
-
-    return small_font, medium_font, large_font
-
-small_font, medium_font, large_font = load_fonts()
 
 def create_text_areas(configs):
     """Given a list of area specifications, create and return test areas."""
