@@ -228,7 +228,6 @@ class Time_State(State):
         # only query the online time once per hour (and on first run)
         if (not self.refresh_time) or ((now - self.refresh_time) > 3600):
             try:
-                print('Getting time from internet!')
                 pyportal.get_local_time(location=secrets['time_location'])
                 self.refresh_time = now
             except RuntimeError as e:
@@ -238,7 +237,6 @@ class Time_State(State):
         if (not self.weather_refresh) or (now - self.weather_refresh) > 600:
             try:
                 value = pyportal.fetch()
-                print("Response is", value)
                 weather = json.loads(value)
 
                 # set the icon/background
@@ -260,12 +258,10 @@ class Time_State(State):
                     self.weather_icon.append(icon_sprite)
 
                 temperature = weather['main']['temp'] - 273.15 # its...in kelvin
-                print(temperature)
                 if celcius:
                     temperature_text = '%3d C' % round(temperature)
                 else:
                     temperature_text = '%3d F' % round(((temperature * 9 / 5) + 32))
-                print(temperature_text)
                 self.text_areas[2].text = temperature_text
                 self.weather_refresh = now
                 board.DISPLAY.refresh_soon()
@@ -480,10 +476,8 @@ current_state = None
 def change_to_state(state_name):
     global current_state
     if current_state:
-        print('Exiting {0}'.format(current_state.name))
         current_state.exit()
     current_state = states[state_name]
-    print('Entering {0}'.format(current_state.name))
     current_state.enter()
 
 ####################
