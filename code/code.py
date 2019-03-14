@@ -26,7 +26,7 @@ import displayio
 from secrets import secrets
 
 # Set up where we'll be fetching data from
-DATA_SOURCE = 'http://api.openweathermap.org/data/2.5/weather?q='+secrets['weather_location']
+DATA_SOURCE = 'http://api.openweathermap.org/data/2.5/weather?id='+secrets['city_id']
 DATA_SOURCE += '&appid='+secrets['openweather_token']
 # You'll need to get a token from openweather.org, looks like 'b6907d289e10d714a6e88b30761fae22'
 DATA_LOCATION = []
@@ -55,8 +55,8 @@ alarm_file = 'computer-alert20.wav'
 alarm_enabled = True
 alarm_armed = True
 alarm_interval = 5.0
-alarm_hour = 23
-alarm_minute = 20
+alarm_hour = 9
+alarm_minute = 45
 snooze_time = None
 snooze_interval = 600.0
 
@@ -217,12 +217,12 @@ class Time_State(State):
             return
 
         # check light level and adjust background & backlight
-        self.adjust_backlight_based_on_light()
+        #self.adjust_backlight_based_on_light()
 
         # only query the online time once per hour (and on first run)
         if (not self.refresh_time) or ((now - self.refresh_time) > 3600):
             try:
-                pyportal.get_local_time(location=secrets['time_location'])
+                pyportal.get_local_time(location=secrets['timezone'])
                 self.refresh_time = now
             except RuntimeError as e:
                 print('Some error occured, retrying! -', e)
@@ -439,6 +439,7 @@ class Setting_State(State):
                         elif t[1] > (self.previous_touch[1]): # moving down
                             alarm_minute = (alarm_minute - 1) % 60
                         self.text_areas[0].text = '%02d:%02d' % (alarm_hour, alarm_minute)
+                    self.previous_touch = t
             board.DISPLAY.refresh_soon()
             board.DISPLAY.wait_for_frame()
         else:
